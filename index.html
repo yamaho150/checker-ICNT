@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Token Checker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f8f8f8;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+      width: 100%;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Cek Alokasi Token</h2>
+  <input type="text" id="addressInput" placeholder="Masukkan address (0x...)">
+  <button onclick="checkAddress()">Cek</button>
+  <div id="result"></div>
+
+  <script>
+    let dataMap = new Map();
+
+    // Ambil dan parse data.txt
+    fetch("data.txt")
+      .then(res => res.text())
+      .then(text => {
+        text.trim().split("\n").forEach(line => {
+          const [addr, token] = line.split("|");
+          if (addr && token) dataMap.set(addr.toLowerCase(), token);
+        });
+      });
+
+    function checkAddress() {
+      const input = document.getElementById("addressInput").value.trim().toLowerCase();
+      const result = document.getElementById("result");
+
+      if (dataMap.has(input)) {
+        result.innerHTML = `<span style="color:green;">${input} | ${dataMap.get(input)} token</span>`;
+      } else {
+        result.innerHTML = `<span style="color:red;">Address tidak ditemukan atau tidak mendapatkan token.</span>`;
+      }
+    }
+  </script>
+</body>
+</html>
